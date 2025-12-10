@@ -39,7 +39,7 @@ This Laravel backend API provides authentication and IP geolocation functionalit
 
 1. **Clone and install dependencies**
 ```bash
-git clone <repository-url>
+git clone https://github.com/HarleyGotardo/backend-api.git
 cd backend-api
 composer install
 ```
