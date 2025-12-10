@@ -13,7 +13,7 @@ class SearchController extends Controller
     public function getGeoLocation(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ip' => 'nullable|ip'
+            'ip' => 'required|ip'
         ]);
 
         if ($validator->fails()) {
@@ -24,7 +24,9 @@ class SearchController extends Controller
         }
 
         $ip = $request->input('ip');
-        $url = $ip ? "https://ipinfo.io/{$ip}/geo" : "https://ipinfo.io/geo";
+
+        // Always require an IP parameter
+        $url = "https://ipinfo.io/{$ip}/geo";
 
         try {
             // Disable SSL verification for development (common issue on Windows/XAMPP)
@@ -41,8 +43,8 @@ class SearchController extends Controller
 
             $geoData = $response->json();
 
-            // If this is a search for a specific IP, save to history
-            if ($ip) {
+            // If this is a search for a specific IP (explicitly provided), save to history
+            if ($request->has('ip')) {
                 $request->user()->searchHistories()->create([
                     'search_term' => $ip,
                     'geo_data' => $geoData
